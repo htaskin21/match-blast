@@ -2,11 +2,20 @@ namespace Blocks
 {
     public class MatchableBlock : Block
     {
-        private BlockMovement _blockMovement;
+        public MatchableBlockColorType ColorType { get; private set; }
 
-        public void SetType()
+        private IconController _iconController;
+        private BlockMovement _blockMovement;
+        
+        public void Init()
         {
-            
+            _iconController = new IconController(_spriteRenderer);
+        }
+
+        public void SetType(MatchableBlockIconSO iconSO)
+        {
+            ColorType = iconSO.ColorType;
+            _iconController.SetIconSO(iconSO);
         }
     }
 }

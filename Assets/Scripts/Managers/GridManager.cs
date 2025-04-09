@@ -20,7 +20,7 @@ namespace Managers
             {
                 for (var x = 0; x < _gridSize.x; x++)
                 {
-                    var block = _matchableBlockPool.GetObject();
+                    var block = _matchableBlockPool.GetRandomBlock();
                     block.transform.position = transform.position + new Vector3(x, y);
                     block.gameObject.SetActive(true);
                     PutItemAt(block, x,y);

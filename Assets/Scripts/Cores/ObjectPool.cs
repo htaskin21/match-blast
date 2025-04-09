@@ -34,7 +34,7 @@ namespace Cores
             _pooledObjects.Push(returnedObject);
         }
 
-        private T CreateObject()
+        protected virtual T CreateObject()
         {
             var newObject = Instantiate(_prefab, transform);
             newObject.gameObject.SetActive(false);

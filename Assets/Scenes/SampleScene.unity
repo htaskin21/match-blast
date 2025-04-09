@@ -336,6 +336,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 1827853781886072719, guid: ec47a2a52da4d484bbb382bff0694b6e, type: 3}
+  _blockIconSO:
+  - {fileID: 11400000, guid: eb5f26d98bc4047a9a3b3578211f653a, type: 2}
+  - {fileID: 11400000, guid: bab44c3c6459f4a2f8ab613640063f54, type: 2}
+  - {fileID: 11400000, guid: 71ea6bc21484a431f8674d2a558dfd86, type: 2}
+  - {fileID: 11400000, guid: 1b3c4e7d380f84fe4b9ace876c0183a4, type: 2}
+  - {fileID: 11400000, guid: fa2a909c8560d4f4c8f8b470debdd85c, type: 2}
+  - {fileID: 11400000, guid: d3bcf4cc89c734fb08f24dce1e80444e, type: 2}
 --- !u!1 &1935745914
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,6 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e713f0dd8efa4f4cb4a921acb016c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _numberOfColors: 3
   _gridManager: {fileID: 40017063}
   _matchableBlockPool: {fileID: 1524975703}
 --- !u!4 &1935745916
