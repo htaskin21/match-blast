@@ -1,13 +1,16 @@
+using UnityEngine;
+using UnityEngine.EventSystems;
+
 namespace Blocks
 {
-    public class MatchableBlock : Block
+    public class MatchableBlock : Block, IPointerClickHandler
     {
         public MatchableBlockColorType ColorType { get; private set; }
 
         private IconController _iconController;
         private BlockMovement _blockMovement;
         
-        public void Init()
+        public void Awake()
         {
             _iconController = new IconController(_spriteRenderer);
         }
@@ -16,6 +19,12 @@ namespace Blocks
         {
             ColorType = iconSO.ColorType;
             _iconController.SetIconSO(iconSO);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Debug.Log($"{this.name} click tıklandı");
+
         }
     }
 }

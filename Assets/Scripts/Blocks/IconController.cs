@@ -4,7 +4,7 @@ namespace Blocks
 {
     public class IconController
     {
-        private SpriteRenderer _spriteRenderer;
+        private readonly SpriteRenderer _spriteRenderer;
         private MatchableBlockIconSO _blockIconSo;
 
         public IconController(SpriteRenderer spriteRenderer)

@@ -16,7 +16,7 @@ namespace Cores
             _poolSize = poolSize;
             _pooledObjects = new Stack<T>(_poolSize);
 
-            for (int i = 0; i < _poolSize; i++)
+            for (var i = 0; i < _poolSize; i++)
             {
                 var newObject = CreateObject();
                 _pooledObjects.Push(newObject);
@@ -34,7 +34,7 @@ namespace Cores
             _pooledObjects.Push(returnedObject);
         }
 
-        protected virtual T CreateObject()
+        private T CreateObject()
         {
             var newObject = Instantiate(_prefab, transform);
             newObject.gameObject.SetActive(false);

@@ -25,12 +25,5 @@ namespace Blocks
             block.SetType(_blockIconSO[randomIconIndex]);
             return block;
         }
-
-        protected override MatchableBlock CreateObject()
-        {
-            var matchableBlock = base.CreateObject();
-            matchableBlock.Init();
-            return matchableBlock;
-        }
     }
 }

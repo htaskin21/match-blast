@@ -6,6 +6,9 @@ namespace Managers
 {
     public class GridManager : GridSystem<Block>
     {
+        [SerializeField]
+        private Vector2 _offScreenOffSet;
+        
         private MatchableBlockPool _matchableBlockPool;
 
         public void Init(MatchableBlockPool matchableBlockPool)

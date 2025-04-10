@@ -7,6 +7,6 @@ namespace Blocks
         Pink = 2,
         Purple = 3,
         Red = 4,
-        Yellow = 5,
+        Yellow = 5
     }
 }
