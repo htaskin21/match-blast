@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -5,8 +6,9 @@ namespace Blocks
 {
     public class MatchableBlock : Block, IPointerClickHandler
     {
-        public MatchableBlockColorType ColorType { get; private set; }
-
+        public Vector2Int Position;
+        public GridManager _gridManager;
+        
         private IconController _iconController;
         private BlockMovement _blockMovement;
         
@@ -23,7 +25,16 @@ namespace Blocks
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log($"{this.name} click tıklandı");
+            var matchedBlocks = _gridManager.GetConnectedBlocks(this);
+            if (matchedBlocks.Count >= 2)
+            {
+                _gridManager.ClearBlocks(matchedBlocks);
+                Debug.Log($"{matchedBlocks.Count} blok patlatıldı.");
+            }
+            else
+            {
+                Debug.Log("Yeterli eşleşme yok.");
+            }
 
         }
     }

@@ -1,4 +1,5 @@
 using Blocks;
+using Logic;
 using UnityEngine;
 
 namespace Managers
@@ -20,7 +21,8 @@ namespace Managers
             _matchableBlockPool.Init(_numberOfColors);
             _matchableBlockPool.CreatePool(poolSize);
 
-            _gridManager.Init(_matchableBlockPool);
+            var blockMatcher = new BlockMatcher();
+            _gridManager.Init(_matchableBlockPool, blockMatcher);
             _gridManager.PopulateGrid();
         }
     }

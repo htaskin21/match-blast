@@ -6,9 +6,9 @@ namespace Blocks
     public class MatchableBlockIconSO : ScriptableObject
     {
         [SerializeField]
-        private MatchableBlockColorType _colorType;
+        private BlockColorType _colorType;
 
-        public MatchableBlockColorType ColorType => _colorType;
+        public BlockColorType ColorType => _colorType;
 
         [SerializeField]
         private Sprite[] _icons;
