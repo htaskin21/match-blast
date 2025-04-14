@@ -6,7 +6,8 @@ namespace Blocks
     {
         [SerializeField]
         protected SpriteRenderer _spriteRenderer;
-
+       
+        public Vector2Int Position;
         public BlockColorType ColorType { get; protected set; }
         
         public override string ToString()

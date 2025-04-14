@@ -15,8 +15,8 @@ namespace Managers
         private BlockMatcher _blockMatcher;
 
         private Dictionary<Vector2Int, List<MatchableBlock>> _matchCache;
-        
-        public void Init(MatchableBlockPool matchableBlockPool,BlockMatcher blockMatcher)
+
+        public void Init(MatchableBlockPool matchableBlockPool, BlockMatcher blockMatcher)
         {
             CreateGrid();
             _matchableBlockPool = matchableBlockPool;
@@ -32,8 +32,8 @@ namespace Managers
                     if (!IsEmpty(x, y)) continue;
                     var block = _matchableBlockPool.GetRandomBlock();
                     block.transform.position = transform.position + new Vector3(x, y);
-                    block._gridManager = this;
                     block.gameObject.SetActive(true);
+                    block.BlockClicked += CheckMatch;
                     block.Position = new Vector2Int(x, y);
                     PutItemAt(block, x, y);
                 }
@@ -41,7 +41,7 @@ namespace Managers
 
             CacheAllMatches();
         }
-        
+
         public void CacheAllMatches()
         {
             _matchCache = new Dictionary<Vector2Int, List<MatchableBlock>>();
@@ -82,8 +82,22 @@ namespace Managers
         {
             if (_matchCache.TryGetValue(pos, out var group))
                 return group;
-    
+
             return new List<MatchableBlock>();
+        }
+
+        private void CheckMatch(Block clickedBlock)
+        {
+            var group = GetMatchedGroupIfAny(clickedBlock.Position);
+            if (group.Count >= 2)
+            {
+                foreach (var block in group)
+                {
+                    block.BlockClicked -= CheckMatch;
+                    RemoveItemAt(block.Position);
+                    Destroy(block.gameObject);
+                }
+            }
         }
     }
 }

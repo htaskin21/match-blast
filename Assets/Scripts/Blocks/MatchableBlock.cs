@@ -1,16 +1,14 @@
-using Managers;
-using UnityEngine;
+using System;
 using UnityEngine.EventSystems;
 
 namespace Blocks
 {
     public class MatchableBlock : Block, IPointerClickHandler
     {
-        public Vector2Int Position;
-        public GridManager _gridManager;
-        
         private IconController _iconController;
         private BlockMovement _blockMovement;
+
+        public event Action<Block> BlockClicked; 
         
         public void Awake()
         {
@@ -25,16 +23,7 @@ namespace Blocks
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            var group = _gridManager.GetMatchedGroupIfAny(Position);
-            if (group.Count >= 2)
-            {
-                foreach (var block in group)
-                {
-                    _gridManager.RemoveItemAt(block.Position);
-                    Destroy(block.gameObject);
-                }
-            }
-
+            BlockClicked?.Invoke(this);
         }
     }
 }
