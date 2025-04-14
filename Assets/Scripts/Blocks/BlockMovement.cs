@@ -8,6 +8,8 @@ namespace Blocks
         private readonly float _speed;
         private readonly Ease _easeType;
 
+        private Tween _activeTween;
+
         public BlockMovement(float speed = 0.2f, Ease ease = Ease.Linear)
         {
             _speed = speed;
@@ -16,7 +18,12 @@ namespace Blocks
 
         public Tween Move(GameObject block, Vector3 targetPos)
         {
-            return block.transform.DOMove(targetPos, _speed).SetEase(_easeType);
+            _activeTween?.Kill();
+
+            _activeTween = block.transform.DOMove(targetPos, _speed)
+                .SetEase(_easeType);
+
+            return _activeTween;
         }
     }
 }

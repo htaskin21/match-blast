@@ -7,7 +7,7 @@ namespace Managers
     public class GameManager : MonoBehaviour
     {
         [SerializeField]
-        private int _numberOfColors;
+        private LevelManager _levelManager;
 
         [SerializeField]
         private GridManager _gridManager;
@@ -17,12 +17,16 @@ namespace Managers
 
         private void Start()
         {
-            var poolSize = _gridManager.GridSize.x * _gridManager.GridSize.y * 2;
-            _matchableBlockPool.Init(_numberOfColors);
+            _matchableBlockPool.Init(_levelManager.NumberOfColors);
+            var poolSize = _levelManager.ColumnSize * _levelManager.RowSize * 2;
             _matchableBlockPool.CreatePool(poolSize);
 
             var blockMatcher = new BlockMatcher();
-            _gridManager.Init(_matchableBlockPool, blockMatcher);
+            var gravityController = new GravityController();
+            var blockRefiller = new BlockRefiller();
+            _gridManager.Init(_levelManager.ColumnSize,
+                _levelManager.RowSize, _matchableBlockPool, blockMatcher,
+                gravityController, blockRefiller);
             _gridManager.PopulateGrid();
         }
     }

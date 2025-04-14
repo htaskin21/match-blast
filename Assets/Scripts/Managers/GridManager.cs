@@ -14,13 +14,19 @@ namespace Managers
 
         private MatchableBlockPool _matchableBlockPool;
         private IBlockMatcher _blockMatcher;
+        private GravityController _gravityController;
+        private BlockRefiller _blockRefiller;
         private Dictionary<Vector2Int, List<MatchableBlock>> _matchCache;
 
-        public void Init(MatchableBlockPool matchableBlockPool, IBlockMatcher blockMatcher)
+        public void Init(int columnSize, int rowSize, MatchableBlockPool matchableBlockPool, IBlockMatcher blockMatcher,
+            GravityController gravityController, BlockRefiller blockRefiller)
         {
+            _gridSize = new Vector2Int(columnSize, rowSize);
             CreateGrid();
             _matchableBlockPool = matchableBlockPool;
             _blockMatcher = blockMatcher;
+            _gravityController = gravityController;
+            _blockRefiller = blockRefiller;
         }
 
         public void PopulateGrid()
@@ -40,7 +46,7 @@ namespace Managers
 
             _matchCache = _blockMatcher.GenerateMatchCache(this);
         }
-        
+
         private void CheckMatch(Block clickedBlock)
         {
             var group = GetMatchedGroupIfAny(clickedBlock.Position);
@@ -53,84 +59,31 @@ namespace Managers
                     _matchableBlockPool.ReturnToPool(block);
                 }
 
-                ApplyGravityAndRefill();
+                _gravityController.ApplyGravity(this, transform.position)
+                    .OnComplete(RefillAfterGravity);
             }
         }
 
-        private void ApplyGravityAndRefill()
+        private void RefillAfterGravity()
         {
-            var fallSequence = DOTween.Sequence();
-
-            for (int x = 0; x < _gridSize.x; x++)
-            {
-                int emptyCount = 0;
-
-                for (int y = 0; y < _gridSize.y; y++)
-                {
-                    var currentPos = new Vector2Int(x, y);
-
-                    if (IsEmpty(currentPos))
-                    {
-                        emptyCount++;
-                    }
-                    else if (emptyCount > 0)
-                    {
-                        var targetPos = new Vector2Int(x, y - emptyCount);
-
-                        if (GetItemAt(currentPos) is not MatchableBlock block)
-                            continue;
-
-                        MoveItemTo(currentPos, targetPos);
-
-                        var boardPos = transform.position + new Vector3(targetPos.x, targetPos.y);
-                        fallSequence.Join(block.BlockMovement.Move(block.gameObject, boardPos)
-                            .OnComplete(() => block.SetPosition(transform.position, targetPos.x, targetPos.y)));
-                    }
-                }
-            }
-
-            fallSequence.OnComplete(SpawnAndDropNewBlocksAfterGravity);
+            _blockRefiller.SpawnNewBlocks(this, _matchableBlockPool, transform.position, CheckMatch)
+                .OnComplete(UpdateMatchCache);
         }
-        
-        private void SpawnAndDropNewBlocksAfterGravity()
+
+        private void UpdateMatchCache()
         {
-            var refillSequence = DOTween.Sequence();
-
-            for (int x = 0; x < _gridSize.x; x++)
-            {
-                int spawnOffset = 0;
-
-                for (int y = _gridSize.y - 1; y >= 0; y--)
-                {
-                    Vector2Int pos = new(x, y);
-                    if (!IsEmpty(pos))
-                        continue;
-
-                    int spawnY = _gridSize.y + spawnOffset;
-                    var block = _matchableBlockPool.GetRandomBlock();
-                    block.SetPosition(transform.position, x, spawnY);
-                    block.gameObject.SetActive(true);
-                    block.BlockClicked += CheckMatch;
-
-                    PutItemAt(block, pos);
-
-                    Vector3 targetWorldPos = transform.position + new Vector3(x, y);
-                    refillSequence.Join(block.BlockMovement.Move(block.gameObject, targetWorldPos)
-                        .OnComplete(() => block.SetPosition(transform.position, pos.x, pos.y)));
-
-                    spawnOffset++;
-                }
-            }
-
-            refillSequence.OnComplete(() =>
-            {
-                _matchCache = _blockMatcher.GenerateMatchCache(this);
-            });
+            _matchCache = _blockMatcher.GenerateMatchCache(this);
         }
-        
+
         private List<MatchableBlock> GetMatchedGroupIfAny(Vector2Int pos)
         {
             return _matchCache.TryGetValue(pos, out var group) ? group : new List<MatchableBlock>();
+        }
+
+        private void OnDestroy()
+        {
+            _gravityController.KillActiveTweens();
+            _blockRefiller.KillRefillSequence();
         }
     }
 }
