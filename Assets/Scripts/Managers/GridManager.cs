@@ -52,12 +52,12 @@ namespace Managers
                     RemoveItemAt(block.Position);
                     _matchableBlockPool.ReturnToPool(block);
                 }
-            }
 
-            ApplyGravity();
+                ApplyGravityAndRefill();
+            }
         }
 
-        private void ApplyGravity()
+        private void ApplyGravityAndRefill()
         {
             var fallSequence = DOTween.Sequence();
 
@@ -83,15 +83,46 @@ namespace Managers
                         MoveItemTo(currentPos, targetPos);
 
                         var boardPos = transform.position + new Vector3(targetPos.x, targetPos.y);
-                        var tween = block.BlockMovement.Move(block.gameObject, boardPos)
-                            .OnComplete(() => block.SetPosition(transform.position, targetPos.x, targetPos.y));
-
-                        fallSequence.Join(tween);
+                        fallSequence.Join(block.BlockMovement.Move(block.gameObject, boardPos)
+                            .OnComplete(() => block.SetPosition(transform.position, targetPos.x, targetPos.y)));
                     }
                 }
             }
 
-            fallSequence.OnComplete(() =>
+            fallSequence.OnComplete(SpawnAndDropNewBlocksAfterGravity);
+        }
+        
+        private void SpawnAndDropNewBlocksAfterGravity()
+        {
+            var refillSequence = DOTween.Sequence();
+
+            for (int x = 0; x < _gridSize.x; x++)
+            {
+                int spawnOffset = 0;
+
+                for (int y = _gridSize.y - 1; y >= 0; y--)
+                {
+                    Vector2Int pos = new(x, y);
+                    if (!IsEmpty(pos))
+                        continue;
+
+                    int spawnY = _gridSize.y + spawnOffset;
+                    var block = _matchableBlockPool.GetRandomBlock();
+                    block.SetPosition(transform.position, x, spawnY);
+                    block.gameObject.SetActive(true);
+                    block.BlockClicked += CheckMatch;
+
+                    PutItemAt(block, pos);
+
+                    Vector3 targetWorldPos = transform.position + new Vector3(x, y);
+                    refillSequence.Join(block.BlockMovement.Move(block.gameObject, targetWorldPos)
+                        .OnComplete(() => block.SetPosition(transform.position, pos.x, pos.y)));
+
+                    spawnOffset++;
+                }
+            }
+
+            refillSequence.OnComplete(() =>
             {
                 _matchCache = _blockMatcher.GenerateMatchCache(this);
             });
