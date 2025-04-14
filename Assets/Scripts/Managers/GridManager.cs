@@ -14,6 +14,8 @@ namespace Managers
         private MatchableBlockPool _matchableBlockPool;
         private BlockMatcher _blockMatcher;
 
+        private Dictionary<Vector2Int, List<MatchableBlock>> _matchCache;
+        
         public void Init(MatchableBlockPool matchableBlockPool,BlockMatcher blockMatcher)
         {
             CreateGrid();
@@ -36,20 +38,52 @@ namespace Managers
                     PutItemAt(block, x, y);
                 }
             }
-        }
 
-        public List<MatchableBlock> GetConnectedBlocks(MatchableBlock block)
-        {
-            return _blockMatcher.FindConnectedBlocks(block, this);
+            CacheAllMatches();
         }
-
-        public void ClearBlocks(List<MatchableBlock> blocks)
+        
+        public void CacheAllMatches()
         {
-            foreach (var block in blocks)
+            _matchCache = new Dictionary<Vector2Int, List<MatchableBlock>>();
+            var visited = new HashSet<Vector2Int>();
+
+            for (int y = 0; y < _gridSize.y; y++)
             {
-                RemoveItemAt(block.Position);
-                Destroy(block.gameObject);
+                for (int x = 0; x < _gridSize.x; x++)
+                {
+                    Vector2Int currentPos = new(x, y);
+                    if (!CheckBounds(currentPos) || visited.Contains(currentPos) || IsEmpty(currentPos))
+                        continue;
+
+                    if (GetItemAt(currentPos) is not MatchableBlock currentBlock)
+                        continue;
+
+                    var group = _blockMatcher.FindConnectedBlocks(currentBlock, this);
+
+                    // Yeterli eşleşme yoksa işaretlemeye gerek yok
+                    if (group.Count < 2)
+                        continue;
+
+                    // Sadece bir defa cache listesi oluştur
+                    foreach (var block in group)
+                    {
+                        if (!visited.Contains(block.Position))
+                        {
+                            _matchCache[block.Position] = group; // Aynı referans, kopya yok
+                            visited.Add(block.Position);
+                        }
+                    }
+                }
             }
+        }
+
+
+        public List<MatchableBlock> GetMatchedGroupIfAny(Vector2Int pos)
+        {
+            if (_matchCache.TryGetValue(pos, out var group))
+                return group;
+    
+            return new List<MatchableBlock>();
         }
     }
 }

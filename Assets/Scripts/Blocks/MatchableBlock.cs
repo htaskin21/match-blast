@@ -25,15 +25,14 @@ namespace Blocks
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            var matchedBlocks = _gridManager.GetConnectedBlocks(this);
-            if (matchedBlocks.Count >= 2)
+            var group = _gridManager.GetMatchedGroupIfAny(Position);
+            if (group.Count >= 2)
             {
-                _gridManager.ClearBlocks(matchedBlocks);
-                Debug.Log($"{matchedBlocks.Count} blok patlatıldı.");
-            }
-            else
-            {
-                Debug.Log("Yeterli eşleşme yok.");
+                foreach (var block in group)
+                {
+                    _gridManager.RemoveItemAt(block.Position);
+                    Destroy(block.gameObject);
+                }
             }
 
         }
