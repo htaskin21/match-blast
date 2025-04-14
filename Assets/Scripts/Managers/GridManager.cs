@@ -16,10 +16,11 @@ namespace Managers
         private IBlockMatcher _blockMatcher;
         private GravityController _gravityController;
         private BlockRefiller _blockRefiller;
+        private MatchIconController _matchIconController;
         private Dictionary<Vector2Int, List<MatchableBlock>> _matchCache;
 
         public void Init(int columnSize, int rowSize, MatchableBlockPool matchableBlockPool, IBlockMatcher blockMatcher,
-            GravityController gravityController, BlockRefiller blockRefiller)
+            GravityController gravityController, BlockRefiller blockRefiller,MatchIconController matchIconController)
         {
             _gridSize = new Vector2Int(columnSize, rowSize);
             CreateGrid();
@@ -27,6 +28,7 @@ namespace Managers
             _blockMatcher = blockMatcher;
             _gravityController = gravityController;
             _blockRefiller = blockRefiller;
+            _matchIconController = matchIconController;
         }
 
         public void PopulateGrid()
@@ -44,7 +46,7 @@ namespace Managers
                 }
             }
 
-            _matchCache = _blockMatcher.GenerateMatchCache(this);
+            UpdateMatchCache();
         }
 
         private void CheckMatch(Block clickedBlock)
@@ -73,6 +75,7 @@ namespace Managers
         private void UpdateMatchCache()
         {
             _matchCache = _blockMatcher.GenerateMatchCache(this);
+            _matchIconController.ChangeIcons(_matchCache);
         }
 
         private List<MatchableBlock> GetMatchedGroupIfAny(Vector2Int pos)

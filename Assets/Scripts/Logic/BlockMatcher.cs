@@ -57,9 +57,9 @@ namespace Logic
             var matchCache = new Dictionary<Vector2Int, List<MatchableBlock>>();
             var visited = new HashSet<Vector2Int>();
 
-            for (int y = 0; y < gridSystem.GridSize.y; y++)
+            for (var y = 0; y < gridSystem.GridSize.y; y++)
             {
-                for (int x = 0; x < gridSystem.GridSize.x; x++)
+                for (var x = 0; x < gridSystem.GridSize.x; x++)
                 {
                     Vector2Int pos = new(x, y);
                     if (!gridSystem.CheckBounds(pos) || visited.Contains(pos) || gridSystem.IsEmpty(pos))
@@ -75,11 +75,9 @@ namespace Logic
 
                     foreach (var block in group)
                     {
-                        if (!visited.Contains(block.Position))
-                        {
-                            matchCache[block.Position] = group;
-                            visited.Add(block.Position);
-                        }
+                        if (visited.Contains(block.Position)) continue;
+                        matchCache[block.Position] = group;
+                        visited.Add(block.Position);
                     }
                 }
             }

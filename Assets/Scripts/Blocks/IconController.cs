@@ -17,5 +17,10 @@ namespace Blocks
             _blockIconSo = blockIconSo;
             _spriteRenderer.sprite = _blockIconSo.GetIcon(0);
         }
+
+        public void ChangeIcon(int index)
+        {
+            _spriteRenderer.sprite = _blockIconSo.GetIcon(index);
+        }
     }
 }

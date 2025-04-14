@@ -24,9 +24,11 @@ namespace Managers
             var blockMatcher = new BlockMatcher();
             var gravityController = new GravityController();
             var blockRefiller = new BlockRefiller();
+            var matchIconController = new MatchIconController(_levelManager.SmallCondition,
+                _levelManager.MediumCondition, _levelManager.BigCondition);
             _gridManager.Init(_levelManager.ColumnSize,
                 _levelManager.RowSize, _matchableBlockPool, blockMatcher,
-                gravityController, blockRefiller);
+                gravityController, blockRefiller, matchIconController);
             _gridManager.PopulateGrid();
         }
     }

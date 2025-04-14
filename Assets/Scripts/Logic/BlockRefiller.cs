@@ -16,25 +16,24 @@ namespace Logic
             _refillSequence?.Kill();
             _refillSequence = DOTween.Sequence();
 
-            for (int x = 0; x < grid.GridSize.x; x++)
+            for (var x = 0; x < grid.GridSize.x; x++)
             {
-                int spawnOffset = 0;
+                var spawnOffset = 0;
 
-                for (int y = grid.GridSize.y - 1; y >= 0; y--)
+                for (var y = grid.GridSize.y - 1; y >= 0; y--)
                 {
                     Vector2Int pos = new(x, y);
                     if (!grid.IsEmpty(pos))
                         continue;
 
-                    int spawnY = grid.GridSize.y + spawnOffset;
+                    var spawnY = grid.GridSize.y + spawnOffset;
                     var block = pool.GetRandomBlock();
                     block.SetPosition(boardOrigin, x, spawnY);
                     block.gameObject.SetActive(true);
                     block.BlockClicked += onClickCallback;
-
                     grid.PutItemAt(block, pos);
 
-                    Vector3 targetWorldPos = boardOrigin + new Vector3(x, y);
+                    var targetWorldPos = boardOrigin + new Vector3(x, y);
                     _refillSequence.Join(block.BlockMovement.Move(block.gameObject, targetWorldPos)
                         .OnComplete(() => block.SetPosition(boardOrigin, pos.x, pos.y)));
 

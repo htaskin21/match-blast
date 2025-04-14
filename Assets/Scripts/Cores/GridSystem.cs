@@ -12,7 +12,7 @@ namespace Cores
 
         private T[,] _gridData;
 
-        public void CreateGrid()
+        protected void CreateGrid()
         {
             _gridData = new T[_gridSize.x, _gridSize.y];
         }
@@ -27,7 +27,7 @@ namespace Cores
             return CheckBounds(position.x, position.y);
         }
 
-        public bool IsEmpty(int x, int y)
+        protected bool IsEmpty(int x, int y)
         {
             return EqualityComparer<T>.Default.Equals(_gridData[x, y], default(T));
         }
@@ -37,7 +37,7 @@ namespace Cores
             return IsEmpty(position.x, position.y);
         }
 
-        public bool PutItemAt(T item, int x, int y, bool allowOverwrite = false)
+        protected bool PutItemAt(T item, int x, int y, bool allowOverwrite = false)
         {
             if (!allowOverwrite && !IsEmpty(x, y))
                 return false;
@@ -68,7 +68,7 @@ namespace Cores
             return temp;
         }
 
-        public T RemoveItemAt(Vector2Int position)
+        protected T RemoveItemAt(Vector2Int position)
         {
             return RemoveItemAt(position.x, position.y);
         }

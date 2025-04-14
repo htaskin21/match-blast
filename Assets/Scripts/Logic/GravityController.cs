@@ -13,16 +13,14 @@ namespace Logic
 
         public Sequence ApplyGravity(GridSystem<Block> grid, Vector3 boardOrigin)
         {
-            // Öncekileri temizle
             KillActiveTweens();
-
             _fallSequence = DOTween.Sequence();
 
-            for (int x = 0; x < grid.GridSize.x; x++)
+            for (var x = 0; x < grid.GridSize.x; x++)
             {
-                int emptyCount = 0;
+                var emptyCount = 0;
 
-                for (int y = 0; y < grid.GridSize.y; y++)
+                for (var y = 0; y < grid.GridSize.y; y++)
                 {
                     var currentPos = new Vector2Int(x, y);
 
@@ -39,7 +37,7 @@ namespace Logic
 
                         grid.MoveItemTo(currentPos, targetPos);
 
-                        Vector3 worldTarget = boardOrigin + new Vector3(targetPos.x, targetPos.y);
+                        var worldTarget = boardOrigin + new Vector3(targetPos.x, targetPos.y);
                         var moveTween = block.BlockMovement.Move(block.gameObject, worldTarget)
                             .OnComplete(() => block.SetPosition(boardOrigin, targetPos.x, targetPos.y));
 

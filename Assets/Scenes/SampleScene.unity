@@ -407,11 +407,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rowSize: 5
-  _columnSize: 2
-  _numberOfColors: 2
-  _smallCondition: 0
-  _mediumCondition: 0
-  _bigCondition: 0
+  _columnSize: 5
+  _numberOfColors: 3
+  _smallCondition: 3
+  _mediumCondition: 5
+  _bigCondition: 7
 --- !u!4 &1367972149
 Transform:
   m_ObjectHideFlags: 0
