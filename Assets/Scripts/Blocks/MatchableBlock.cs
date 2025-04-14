@@ -6,13 +6,15 @@ namespace Blocks
     public class MatchableBlock : Block, IPointerClickHandler
     {
         private IconController _iconController;
-        private BlockMovement _blockMovement;
 
-        public event Action<Block> BlockClicked; 
-        
+        public BlockMovement BlockMovement { get; private set; }
+
+        public event Action<Block> BlockClicked;
+
         public void Awake()
         {
             _iconController = new IconController(_spriteRenderer);
+            BlockMovement = new BlockMovement();
         }
 
         public void SetType(MatchableBlockIconSO iconSO)

@@ -5,12 +5,18 @@ namespace Blocks
 {
     public class BlockMovement
     {
-        private float _speed;
-        private Ease _easeType;
+        private readonly float _speed;
+        private readonly Ease _easeType;
 
-        public void Move(GameObject block, Transform targetTransform)
+        public BlockMovement(float speed = 0.2f, Ease ease = Ease.Linear)
         {
-            block.transform.DOMove(targetTransform.position, _speed).SetEase(_easeType);
+            _speed = speed;
+            _easeType = ease;
+        }
+
+        public Tween Move(GameObject block, Vector3 targetPos)
+        {
+            return block.transform.DOMove(targetPos, _speed).SetEase(_easeType);
         }
     }
 }
