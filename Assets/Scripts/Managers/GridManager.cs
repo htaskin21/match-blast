@@ -22,7 +22,7 @@ namespace Managers
         public void Init(int columnSize, int rowSize, MatchableBlockPool matchableBlockPool, IBlockMatcher blockMatcher,
             GravityController gravityController, BlockRefiller blockRefiller,MatchIconController matchIconController)
         {
-            _gridSize = new Vector2Int(columnSize, rowSize);
+            GridSize = new Vector2Int(columnSize, rowSize);
             CreateGrid();
             _matchableBlockPool = matchableBlockPool;
             _blockMatcher = blockMatcher;
@@ -33,9 +33,9 @@ namespace Managers
 
         public void PopulateGrid()
         {
-            for (var y = 0; y < _gridSize.y; y++)
+            for (var y = 0; y < GridSize.y; y++)
             {
-                for (var x = 0; x < _gridSize.x; x++)
+                for (var x = 0; x < GridSize.x; x++)
                 {
                     if (!IsEmpty(x, y)) continue;
                     var block = _matchableBlockPool.GetRandomBlock();

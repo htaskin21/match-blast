@@ -151,7 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2422e32787e634186b1b255ed5d346d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridSize: {x: 5, y: 5}
   _offScreenOffSet: {x: 0, y: 0}
 --- !u!4 &40017064
 Transform:
@@ -180,6 +179,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -277,6 +277,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676e5138e4e44452faa410829a49ab3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 519420031}
+  _borderSize: 0.5
 --- !u!1 &747056408
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84b151f0609ba459fa4034e7119079b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rowSize: 5
+  _rowSize: 7
   _columnSize: 5
   _numberOfColors: 3
   _smallCondition: 3
@@ -509,6 +523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelManager: {fileID: 1367972148}
+  _cameraController: {fileID: 519420034}
   _gridManager: {fileID: 40017063}
   _matchableBlockPool: {fileID: 1524975703}
 --- !u!4 &1935745916

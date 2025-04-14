@@ -10,6 +10,9 @@ namespace Managers
         private LevelManager _levelManager;
 
         [SerializeField]
+        private CameraController _cameraController;
+
+        [SerializeField]
         private GridManager _gridManager;
 
         [SerializeField]
@@ -17,6 +20,8 @@ namespace Managers
 
         private void Start()
         {
+            _cameraController.Setup(_levelManager.RowSize, _levelManager.ColumnSize);
+            
             _matchableBlockPool.Init(_levelManager.NumberOfColors);
             var poolSize = _levelManager.ColumnSize * _levelManager.RowSize * 2;
             _matchableBlockPool.CreatePool(poolSize);

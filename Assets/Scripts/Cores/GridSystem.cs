@@ -5,21 +5,18 @@ namespace Cores
 {
     public class GridSystem<T> : MonoBehaviour
     {
-        [SerializeField]
-        protected Vector2Int _gridSize;
-
-        public Vector2Int GridSize => _gridSize;
+        public Vector2Int GridSize { get; protected set; }
 
         private T[,] _gridData;
 
         protected void CreateGrid()
         {
-            _gridData = new T[_gridSize.x, _gridSize.y];
+            _gridData = new T[GridSize.x, GridSize.y];
         }
 
         public bool CheckBounds(int x, int y)
         {
-            return x >= 0 && x < _gridSize.x && y >= 0 && y < _gridSize.y;
+            return x >= 0 && x < GridSize.x && y >= 0 && y < GridSize.y;
         }
 
         public bool CheckBounds(Vector2Int position)
@@ -95,31 +92,6 @@ namespace Cores
         public void SwapItemsAt(Vector2Int position1, Vector2Int position2)
         {
             SwapItemsAt(position1.x, position1.y, position2.x, position2.y);
-        }
-
-        public override string ToString()
-        {
-            string s = "";
-
-            for (int y = _gridSize.y - 1; y != -1; --y)
-            {
-                s += "[ ";
-
-                for (int x = 0; x != _gridSize.x; ++x)
-                {
-                    if (IsEmpty(x, y))
-                        s += "x";
-                    else
-                        s += _gridData[x, y].ToString();
-
-                    if (x != _gridSize.x - 1)
-                        s += ", ";
-                }
-
-                s += " ]\n";
-            }
-
-            return s;
         }
     }
 }
