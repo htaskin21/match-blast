@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Blocks;
+using Cores;
 using UnityEngine;
 
 namespace Logic
@@ -17,30 +18,37 @@ namespace Logic
             _bigCondition = bigCondition;
         }
 
-        public void ChangeIcons(Dictionary<Vector2Int, List<MatchableBlock>> matchCache)
+        public void ChangeIcons(Dictionary<Vector2Int, List<MatchableBlock>> matchCache, GridSystem<Block> grid)
         {
             var processedBlocks = new HashSet<MatchableBlock>();
+            var matchedBlocks = new HashSet<MatchableBlock>();
 
             foreach (var group in matchCache.Values)
             {
-                if (group.Count == 0)
-                    continue;
-
-                if (processedBlocks.Contains(group[0]))
+                if (group.Count == 0 || processedBlocks.Contains(group[0]))
                     continue;
 
                 var uniqueGroup = new HashSet<MatchableBlock>(group);
                 var count = uniqueGroup.Count;
 
+                var iconIndex = GetIconIndexForMatchCount(count);
+
                 foreach (var block in uniqueGroup)
                 {
                     processedBlocks.Add(block);
-                }
-
-                var iconIndex = GetIconIndexForMatchCount(count);
-                foreach (var block in uniqueGroup)
-                {
+                    matchedBlocks.Add(block);
                     block.IconController.ChangeIcon(iconIndex);
+                }
+            }
+
+            for (var x = 0; x < grid.GridSize.x; x++)
+            {
+                for (var y = 0; y < grid.GridSize.y; y++)
+                {
+                    if (grid.GetItemAt(x, y) is MatchableBlock block && !matchedBlocks.Contains(block))
+                    {
+                        block.IconController.ChangeIcon(0);
+                    }
                 }
             }
         }

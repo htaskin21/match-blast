@@ -75,7 +75,7 @@ namespace Managers
         private void UpdateMatchCache()
         {
             _matchCache = _blockMatcher.GenerateMatchCache(this);
-            _matchIconController.ChangeIcons(_matchCache);
+            _matchIconController.ChangeIcons(_matchCache,this);
         }
 
         private List<MatchableBlock> GetMatchedGroupIfAny(Vector2Int pos)
