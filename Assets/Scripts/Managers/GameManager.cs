@@ -21,20 +21,24 @@ namespace Managers
         private void Start()
         {
             _cameraController.Setup(_levelManager.RowSize, _levelManager.ColumnSize);
-            
+
             _matchableBlockPool.Init(_levelManager.NumberOfColors);
             var poolSize = _levelManager.ColumnSize * _levelManager.RowSize * 2;
             _matchableBlockPool.CreatePool(poolSize);
 
-            var blockMatcher = new BlockMatcher();
+
             var gravityController = new GravityController();
-            var blockRefiller = new BlockRefiller();
+            _gridManager.Init(_levelManager.ColumnSize,
+                _levelManager.RowSize, _matchableBlockPool,
+                gravityController);
+
+            var blockMatcher = new BlockMatcher();
             var matchIconController = new MatchIconController(_levelManager.SmallCondition,
                 _levelManager.MediumCondition, _levelManager.BigCondition);
-            _gridManager.Init(_levelManager.ColumnSize,
-                _levelManager.RowSize, _matchableBlockPool, blockMatcher,
-                gravityController, blockRefiller, matchIconController);
-            _gridManager.PopulateGrid();
+            var boardController = new MatchController(_gridManager, blockMatcher, matchIconController);
+
+            var blocks = _gridManager.FillGrids();
+            boardController.RegisterBlocks(blocks);
         }
     }
 }

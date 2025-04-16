@@ -65,7 +65,7 @@ namespace Cores
             return temp;
         }
 
-        protected T RemoveItemAt(Vector2Int position)
+        public T RemoveItemAt(Vector2Int position)
         {
             return RemoveItemAt(position.x, position.y);
         }
