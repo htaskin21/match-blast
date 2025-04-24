@@ -55,17 +55,17 @@ namespace Logic
 
         private int GetIconIndexForMatchCount(int count)
         {
-            if (count > _smallCondition && count <= _mediumCondition)
+            if (count >= _smallCondition && count < _mediumCondition)
             {
                 return 1;
             }
 
-            if (count > _mediumCondition && count <= _bigCondition)
+            if (count >= _mediumCondition && count < _bigCondition)
             {
                 return 2;
             }
 
-            return count > _bigCondition ? 3 : 0;
+            return count >= _bigCondition ? 3 : 0;
         }
     }
 }
