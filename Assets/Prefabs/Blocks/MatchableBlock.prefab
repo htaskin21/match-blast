@@ -90,7 +90,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 0.8}
+  m_Size: {x: 0.8, y: 0.77}
   m_EdgeRadius: 0
 --- !u!1 &7834943864721870242
 GameObject:
@@ -165,7 +165,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d395c61cc1c32450ea7684ac09778ef3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 43d26054e69da41db9fc1bc1ad67546b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

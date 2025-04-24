@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bccb0fc68f48040c0bf1ab869785761b, type: 3}
-  m_Name: PinkIconSO
+  m_Name: OrangeIconSO
   m_EditorClassIdentifier: 
   _colorType: 3
   _icons:
-  - {fileID: 21300000, guid: 793a289ad4e164b14930004e3b8c26b6, type: 3}
-  - {fileID: 21300000, guid: 0cc58eb78efb340c883a70a57be1ca43, type: 3}
-  - {fileID: 21300000, guid: 173b66badfcfe4af19a6613c61514ce8, type: 3}
-  - {fileID: 21300000, guid: 0bd2e52f67ec748c7b6a23661669b7f5, type: 3}
+  - {fileID: 21300000, guid: dbffe574086e0415fb4be24d0abc8364, type: 3}
+  - {fileID: 21300000, guid: d73912ace0ade496fb3196595a9a1016, type: 3}
+  - {fileID: 21300000, guid: a02e8d0410ef444dc8145d96080e6bb4, type: 3}
+  - {fileID: 21300000, guid: cc09f3ba7acb0485597c271407e2a5d0, type: 3}
