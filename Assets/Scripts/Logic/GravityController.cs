@@ -6,11 +6,15 @@ using UnityEngine;
 
 namespace Logic
 {
+    // Applies gravity effect to blocks in the grid after matches or removals.
     public class GravityController
     {
         private Sequence _fallSequence;
         private readonly List<Tween> _individualTweens = new();
 
+        /// <summary>
+        /// Applies gravity by moving blocks downward to fill empty spaces.
+        /// </summary>
         public Sequence ApplyGravity(GridSystem<Block> grid, Vector3 boardOrigin)
         {
             KillActiveTweens();

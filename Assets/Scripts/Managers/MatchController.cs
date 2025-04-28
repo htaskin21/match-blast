@@ -52,7 +52,7 @@ namespace Managers
 
         private void UpdateMatchCache()
         {
-            _matchCache = _blockMatcher.GenerateMatchCache(_gridManager);
+            _matchCache = _blockMatcher.FindAllMatches(_gridManager);
             _matchIconController.ChangeIcons(_matchCache, _gridManager);
         }
 

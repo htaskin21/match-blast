@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Cores
 {
+    // Provides a generic 2D grid data structure with basic operations.
     public class GridSystem<T> : MonoBehaviour
     {
         public Vector2Int GridSize { get; protected set; }

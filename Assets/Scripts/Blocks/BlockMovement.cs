@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Blocks
 {
+    // Controls the movement animation of a block using DOTween.
     public class BlockMovement
     {
         private readonly float _speed;

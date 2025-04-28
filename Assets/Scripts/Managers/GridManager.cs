@@ -29,6 +29,11 @@ namespace Managers
             DroppedBlocks = new List<MatchableBlock>();
         }
 
+
+        /// <summary>
+        /// Fills the entire grid with random blocks.
+        /// </summary>
+        /// <returns></returns>
         public List<MatchableBlock> FillGrids()
         {
             var blocks = new List<MatchableBlock>(GridSize.x * GridSize.y);
@@ -48,6 +53,9 @@ namespace Managers
             return blocks;
         }
 
+        /// <summary>
+        /// Spawns blocks for all empty grid positions from off-screen.
+        /// </summary>
         private Sequence SpawnBlocksForEmptyGrids()
         {
             _dropBlocksSequence?.Kill();
@@ -87,6 +95,10 @@ namespace Managers
             _matchableBlockPool.ReturnToPool(block);
         }
 
+        /// <summary>
+        /// Refills the board by applying gravity and spawning new blocks.
+        /// </summary>
+        /// <returns></returns>
         public Sequence RefillBoard()
         {
             var gravitySequence = _gravityController.ApplyGravity(this, transform.position);
