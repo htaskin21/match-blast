@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2422e32787e634186b1b255ed5d346d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _offScreenOffSet: {x: 0, y: 4}
+  _offScreenOffSet: {x: 0, y: 5}
 --- !u!4 &40017064
 Transform:
   m_ObjectHideFlags: 0
