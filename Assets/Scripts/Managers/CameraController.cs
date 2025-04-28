@@ -10,6 +10,9 @@ namespace Managers
         [SerializeField]
         private float _borderSize;
 
+       /// <summary>
+       /// Sets up the camera position and orthographic size based on the board size.
+       /// </summary>
         public void Setup(int row, int column)
         {
             if (_camera == null)

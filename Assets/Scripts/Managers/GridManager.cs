@@ -10,29 +10,33 @@ namespace Managers
     public class GridManager : GridSystem<Block>
     {
         [SerializeField]
-        private Vector2 _offScreenOffSet;
+        private Vector2Int _offScreenOffSet;
 
         private MatchableBlockPool _matchableBlockPool;
-        private IBlockMatcher _blockMatcher;
         private GravityController _gravityController;
-        private BlockRefiller _blockRefiller;
-        private MatchIconController _matchIconController;
-        private Dictionary<Vector2Int, List<MatchableBlock>> _matchCache;
+        private Sequence _dropBlocksSequence;
+        private Sequence _refillBoardSequence;
 
-        public void Init(int columnSize, int rowSize, MatchableBlockPool matchableBlockPool, IBlockMatcher blockMatcher,
-            GravityController gravityController, BlockRefiller blockRefiller,MatchIconController matchIconController)
+        public List<MatchableBlock> DroppedBlocks { get; private set; }
+
+        public void Init(int columnSize, int rowSize, MatchableBlockPool matchableBlockPool,
+            GravityController gravityController)
         {
             GridSize = new Vector2Int(columnSize, rowSize);
             CreateGrid();
             _matchableBlockPool = matchableBlockPool;
-            _blockMatcher = blockMatcher;
             _gravityController = gravityController;
-            _blockRefiller = blockRefiller;
-            _matchIconController = matchIconController;
+            DroppedBlocks = new List<MatchableBlock>();
         }
 
-        public void PopulateGrid()
+
+        /// <summary>
+        /// Fills the entire grid with random blocks.
+        /// </summary>
+        /// <returns></returns>
+        public List<MatchableBlock> FillGrids()
         {
+            var blocks = new List<MatchableBlock>(GridSize.x * GridSize.y);
             for (var y = 0; y < GridSize.y; y++)
             {
                 for (var x = 0; x < GridSize.x; x++)
@@ -41,52 +45,78 @@ namespace Managers
                     var block = _matchableBlockPool.GetRandomBlock();
                     block.SetPosition(transform.position, x, y);
                     block.gameObject.SetActive(true);
-                    block.BlockClicked += CheckMatch;
                     PutItemAt(block, x, y);
+                    blocks.Add(block);
                 }
             }
 
-            UpdateMatchCache();
+            return blocks;
         }
 
-        private void CheckMatch(Block clickedBlock)
+        /// <summary>
+        /// Spawns blocks for all empty grid positions from off-screen.
+        /// </summary>
+        private Sequence SpawnBlocksForEmptyGrids()
         {
-            var group = GetMatchedGroupIfAny(clickedBlock.Position);
-            if (group.Count >= 2)
+            _dropBlocksSequence?.Kill();
+            _dropBlocksSequence = DOTween.Sequence();
+            DroppedBlocks.Clear();
+            for (var x = 0; x < GridSize.x; x++)
             {
-                foreach (var block in group)
+                var spawnOffset = _offScreenOffSet.y;
+
+                for (var y = GridSize.y - 1; y >= 0; y--)
                 {
-                    block.BlockClicked -= CheckMatch;
-                    RemoveItemAt(block.Position);
-                    _matchableBlockPool.ReturnToPool(block);
+                    Vector2Int pos = new(x, y);
+                    if (!IsEmpty(pos))
+                        continue;
+
+                    var spawnY = GridSize.y + spawnOffset;
+                    var block = _matchableBlockPool.GetRandomBlock();
+                    block.SetPosition(transform.position, x, spawnY);
+                    block.gameObject.SetActive(true);
+                    PutItemAt(block, pos);
+                    DroppedBlocks.Add(block);
+
+                    var targetWorldPos = transform.position + new Vector3(x, y);
+                    _dropBlocksSequence.Join(block.BlockMovement.Move(block.gameObject, targetWorldPos)
+                        .OnComplete(() => block.SetPosition(transform.position, pos.x, pos.y)));
+
+                    spawnOffset++;
                 }
-
-                _gravityController.ApplyGravity(this, transform.position)
-                    .OnComplete(RefillAfterGravity);
             }
+
+            return _dropBlocksSequence;
         }
 
-        private void RefillAfterGravity()
+        public void RemoveBlock(MatchableBlock block)
         {
-            _blockRefiller.SpawnNewBlocks(this, _matchableBlockPool, transform.position, CheckMatch)
-                .OnComplete(UpdateMatchCache);
+            RemoveItemAt(block.Position);
+            _matchableBlockPool.ReturnToPool(block);
         }
 
-        private void UpdateMatchCache()
+        /// <summary>
+        /// Refills the board by applying gravity and spawning new blocks.
+        /// </summary>
+        /// <returns></returns>
+        public Sequence RefillBoard()
         {
-            _matchCache = _blockMatcher.GenerateMatchCache(this);
-            _matchIconController.ChangeIcons(_matchCache,this);
-        }
+            var gravitySequence = _gravityController.ApplyGravity(this, transform.position);
+            var spawnSequence = SpawnBlocksForEmptyGrids();
 
-        private List<MatchableBlock> GetMatchedGroupIfAny(Vector2Int pos)
-        {
-            return _matchCache.TryGetValue(pos, out var group) ? group : new List<MatchableBlock>();
+            _refillBoardSequence?.Kill();
+            _refillBoardSequence = DOTween.Sequence();
+
+            return _refillBoardSequence
+                .Append(gravitySequence)
+                .Append(spawnSequence);
         }
 
         private void OnDestroy()
         {
             _gravityController.KillActiveTweens();
-            _blockRefiller.KillRefillSequence();
+            _dropBlocksSequence?.Kill();
+            _refillBoardSequence?.Kill();
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Blocks
 {
+    // Base class for all block types on the board with basic properties.
     public abstract class Block : MonoBehaviour
     {
         [SerializeField]

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Logic
 {
+    // Handles finding connected blocks and generating match data for the grid using DFS (Depth-First Search) traversal.
     public class BlockMatcher : IBlockMatcher
     {
         private readonly Vector2Int[] _directions =
@@ -22,6 +23,9 @@ namespace Logic
             _minMatchCount = minMatchCount;
         }
 
+        /// <summary>
+        /// Finds all connected blocks of the same type starting from a given block using DFS traversal.
+        /// </summary>
         public List<MatchableBlock> FindConnectedBlocks(MatchableBlock startBlock, GridSystem<Block> gridSystem)
         {
             var visited = new HashSet<Vector2Int>();
@@ -52,7 +56,10 @@ namespace Logic
             return connectedBlocks;
         }
 
-        public Dictionary<Vector2Int, List<MatchableBlock>> GenerateMatchCache(GridSystem<Block> gridSystem)
+        /// <summary>
+        /// Generates a cache mapping positions to their matching group using DFS-based search.
+        /// </summary>
+        public Dictionary<Vector2Int, List<MatchableBlock>> FindAllMatches(GridSystem<Block> gridSystem)
         {
             var matchCache = new Dictionary<Vector2Int, List<MatchableBlock>>();
             var visited = new HashSet<Vector2Int>();

@@ -7,8 +7,6 @@ namespace Logic
 {
     public interface IBlockMatcher
     {
-        List<MatchableBlock> FindConnectedBlocks(MatchableBlock startBlock, GridSystem<Block> gridSystem);
-
-        Dictionary<Vector2Int, List<MatchableBlock>> GenerateMatchCache(GridSystem<Block> gridSystem);
+        Dictionary<Vector2Int, List<MatchableBlock>> FindAllMatches(GridSystem<Block> gridSystem);
     }
 }

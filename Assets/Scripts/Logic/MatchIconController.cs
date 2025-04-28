@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Logic
 {
+    // Controls block icons based on the size of the matched group.
     public class MatchIconController
     {
         private readonly int _smallCondition;
@@ -18,6 +19,9 @@ namespace Logic
             _bigCondition = bigCondition;
         }
 
+        /// <summary>
+        /// Updates the icons of the blocks based on match group sizes.
+        /// </summary>
         public void ChangeIcons(Dictionary<Vector2Int, List<MatchableBlock>> matchCache, GridSystem<Block> grid)
         {
             var processedBlocks = new HashSet<MatchableBlock>();
@@ -53,6 +57,9 @@ namespace Logic
             }
         }
 
+        /// <summary>
+        /// Determines which icon index to use based on match count.
+        /// </summary>
         private int GetIconIndexForMatchCount(int count)
         {
             if (count >= _smallCondition && count < _mediumCondition)
