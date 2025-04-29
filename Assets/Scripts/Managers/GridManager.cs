@@ -16,6 +16,7 @@ namespace Managers
         private GravityController _gravityController;
         private Sequence _dropBlocksSequence;
         private Sequence _refillBoardSequence;
+        private Vector2 _blockSize;
 
         public List<MatchableBlock> DroppedBlocks { get; private set; }
 
@@ -26,6 +27,7 @@ namespace Managers
             CreateGrid();
             _matchableBlockPool = matchableBlockPool;
             _gravityController = gravityController;
+            _blockSize = _matchableBlockPool.BlockSize;
             DroppedBlocks = new List<MatchableBlock>();
         }
 
@@ -43,7 +45,12 @@ namespace Managers
                 {
                     if (!IsEmpty(x, y)) continue;
                     var block = _matchableBlockPool.GetRandomBlock();
-                    block.SetPosition(transform.position, x, y);
+
+                    block.SetGridPosition(x, y);
+                    var blockWorldPos = transform.position + new Vector3(x * _blockSize.x, y * _blockSize.y, 0);
+                    block.SetWorldPosition(blockWorldPos);
+                    block.SetSortingOrder(y);
+
                     block.gameObject.SetActive(true);
                     PutItemAt(block, x, y);
                     blocks.Add(block);
@@ -73,14 +80,22 @@ namespace Managers
 
                     var spawnY = GridSize.y + spawnOffset;
                     var block = _matchableBlockPool.GetRandomBlock();
-                    block.SetPosition(transform.position, x, spawnY);
+
+                    var blockWorldPos = transform.position + new Vector3(x * _blockSize.x, spawnY * _blockSize.y, 0);
+                    block.SetWorldPosition(blockWorldPos);
+
                     block.gameObject.SetActive(true);
                     PutItemAt(block, pos);
                     DroppedBlocks.Add(block);
 
-                    var targetWorldPos = transform.position + new Vector3(x, y);
+                    var targetWorldPos = transform.position + new Vector3(x * _blockSize.x, y * _blockSize.y, 0);
                     _dropBlocksSequence.Join(block.BlockMovement.Move(block.gameObject, targetWorldPos)
-                        .OnComplete(() => block.SetPosition(transform.position, pos.x, pos.y)));
+                        .OnComplete(() =>
+                        {
+                            block.SetGridPosition(pos.x, pos.y);
+                            block.SetWorldPosition(targetWorldPos);
+                            block.SetSortingOrder(pos.y);
+                        }));
 
                     spawnOffset++;
                 }
@@ -91,7 +106,7 @@ namespace Managers
 
         public void RemoveBlock(MatchableBlock block)
         {
-            RemoveItemAt(block.Position);
+            RemoveItemAt(block.GridPosition);
             _matchableBlockPool.ReturnToPool(block);
         }
 

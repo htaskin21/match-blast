@@ -11,11 +11,14 @@ namespace Blocks
 
         private int _numberOfColors;
         private Random _random;
-        
+
+        public Vector2 BlockSize { get; private set; }
+
         public void Init(int numberOfColors)
         {
             _numberOfColors = numberOfColors;
             _random = new Random();
+            BlockSize = _prefab.GetBlockSize();
         }
 
         public MatchableBlock GetRandomBlock()

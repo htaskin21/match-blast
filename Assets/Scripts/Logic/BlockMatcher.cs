@@ -34,7 +34,7 @@ namespace Logic
 
             var targetColor = startBlock.ColorType;
 
-            toVisit.Push(startBlock.Position);
+            toVisit.Push(startBlock.GridPosition);
 
             while (toVisit.Count > 0)
             {
@@ -82,9 +82,9 @@ namespace Logic
 
                     foreach (var block in group)
                     {
-                        if (visited.Contains(block.Position)) continue;
-                        matchCache[block.Position] = group;
-                        visited.Add(block.Position);
+                        if (visited.Contains(block.GridPosition)) continue;
+                        matchCache[block.GridPosition] = group;
+                        visited.Add(block.GridPosition);
                     }
                 }
             }

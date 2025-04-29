@@ -12,6 +12,13 @@ namespace Logic
         private Sequence _fallSequence;
         private readonly List<Tween> _individualTweens = new();
 
+        private readonly Vector2 _blockSize;
+
+        public GravityController(Vector2 blockSize)
+        {
+            _blockSize = blockSize;
+        }
+
         /// <summary>
         /// Applies gravity by moving blocks downward to fill empty spaces.
         /// </summary>
@@ -41,9 +48,15 @@ namespace Logic
 
                         grid.MoveItemTo(currentPos, targetPos);
 
-                        var worldTarget = boardOrigin + new Vector3(targetPos.x, targetPos.y);
+                        var worldTarget = boardOrigin +
+                                          new Vector3(targetPos.x * _blockSize.x, targetPos.y * _blockSize.y, 0f);
                         var moveTween = block.BlockMovement.Move(block.gameObject, worldTarget)
-                            .OnComplete(() => block.SetPosition(boardOrigin, targetPos.x, targetPos.y));
+                            .OnComplete(() =>
+                            {
+                                block.SetGridPosition(targetPos.x, targetPos.y);
+                                block.SetWorldPosition(worldTarget);
+                                block.SetSortingOrder(targetPos.y);
+                            });
 
                         _individualTweens.Add(moveTween);
                         _fallSequence.Join(moveTween);

@@ -37,7 +37,7 @@ namespace Managers
 
         private void CheckMatch(Block clickedBlock)
         {
-            var group = GetMatchedGroupIfAny(clickedBlock.Position);
+            var group = GetMatchedGroupIfAny(clickedBlock.GridPosition);
             if (group.Count >= 2)
             {
                 foreach (var block in group)
